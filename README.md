@@ -1,2 +1,2 @@
-# cybercomfloorball
-This is for developing cybercom floorball webpage
+# cybercom
+This is for developing cybercom projects
