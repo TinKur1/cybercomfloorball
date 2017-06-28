@@ -200,129 +200,19 @@
 	"buffers":
 	[
 		{
-			"file": "floorball/assets/css/style.css",
-			"settings":
-			{
-				"buffer_size": 2642,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/welcomeadmin.php",
+			"file": "welcomeadmin.php",
 			"settings":
 			{
 				"buffer_size": 2274,
-				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "floorball/databaseconn.php",
-			"settings":
-			{
-				"buffer_size": 261,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/admin.php",
+			"file": "admin.php",
 			"settings":
 			{
 				"buffer_size": 10093,
-				"encoding": "UTF-8",
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/sendmail.php",
-			"settings":
-			{
-				"buffer_size": 1992,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/welcome.php",
-			"settings":
-			{
-				"buffer_size": 2111,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/update_user_status.php",
-			"settings":
-			{
-				"buffer_size": 3060,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/user.php",
-			"settings":
-			{
-				"buffer_size": 8370,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/sort.php",
-			"settings":
-			{
-				"buffer_size": 5677,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "floorball/databaseconf.php",
-			"settings":
-			{
-				"buffer_size": 3106,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "<?php\n\nsession_start();\n\nif( isset($_SESSION['user_id']) ){\n\t// header(\"Location: /welcomeadmin.php\");\n}\n\n$message = '';\n\nrequire 'databaseconn.php';\n\nif (isset($_POST[\"newUser\"]) && !empty($_POST[\"newUser\"])):\nif (($_SERVER[\"REQUEST_METHOD\"] == \"POST\") && (!empty($_POST['email']))):\n\n    $records = $conn->prepare('SELECT * FROM groupInfo WHERE email = :email');\n    $records->bindParam(':email', $_POST['email']);\n    $records->execute();\n    $results = $records->fetch(PDO::FETCH_ASSOC);\n\n    // var_dump($results);\n    // print_r($results);\n\n    if (is_bool($results)):\n        // Enter the new user in the database\n        $sql = \"INSERT INTO groupInfo (id, firstname, lastname, email, category, type, tu_status) VALUES (:id, :firstname, :lastname, :email, :category, :type, :tu_status)\";\n        $stmt = $conn->prepare($sql);\n        \n        $id = randNum(14);\n        $firstname = $_POST['firstname'];\n        $lastname = $_POST['lastname'];\n        $email = $_POST['email'];\n        $category = $_POST['category'];\n        $type = 'user';\n        $tu_status = 'noanswer';\n\n        $stmt->bindParam(':id', $id);\n        $stmt->bindParam(':firstname', $firstname);\n        $stmt->bindParam(':lastname', $lastname);\n        $stmt->bindParam(':email', $email);\n        $stmt->bindParam(':category', $category);\n        $stmt->bindParam(':type', $type);\n        $stmt->bindParam(':tu_status', $tu_status);\n\n        if( $stmt->execute() ):\n            $message = 'Successfully created new user';\n            //echo $message;\n            header(\"Location: /welcomeadmin.php\");\n        else:\n            $message = 'Sorry there must have been an issue registering this entry';\n            echo $message;\n            //header(\"Location: /welcomeadmin.php\");\n        endif;\n    else:\n        $message = 'Entry with this email address is already registered';\n        echo $message;\n        //header(\"Location: /welcomeadmin.php\");\n    endif;\nelse:\n\t$message = 'Email address is missing';\n    echo $message;\n    //header(\"Location: /welcomeadmin.php\");\nendif;\nelseif (isset($_POST[\"newMultipleUser\"]) && !empty($_POST[\"newMultipleUser\"])):\nif (($_SERVER[\"REQUEST_METHOD\"] == \"POST\") && (!empty($_POST['multipleUsersString']))):\n\n    $multipleUsersString = $_POST['multipleUsersString'];\n    $multipleUsersArray = explode(';', $multipleUsersString);\n    // print_r($multipleUsersArray);\n\n    foreach ($multipleUsersArray as $email) {\n\n    $records = $conn->prepare('SELECT * FROM groupInfo WHERE email = :email');\n    $records->bindParam(':email', $email);\n    $records->execute();\n    $results = $records->fetch(PDO::FETCH_ASSOC);\n\n    // var_dump($results);\n    // print_r($results);\n\n    if (is_bool($results)):\n        // Enter the new user in the database\n        $sql = \"INSERT INTO groupInfo (id, email, type, tu_status) VALUES (:id, :email, :type, :tu_status)\";\n        $stmt = $conn->prepare($sql);\n        \n        $id = randNum(14);\n        $email = $email;\n        $type = 'user';\n        $tu_status = 'noanswer';\n\n        $stmt->bindParam(':id', $id);\n        $stmt->bindParam(':email', $email);\n        $stmt->bindParam(':type', $type);\n        $stmt->bindParam(':tu_status', $tu_status);\n\n        if( $stmt->execute() ):\n            $message = 'Successfully created new users';\n            //echo $message;\n            header(\"Location: /welcomeadmin.php\");\n        else:\n            $message = 'Sorry there must have been an issue registering this entry';\n            echo $message;\n            //header(\"Location: /welcomeadmin.php\");\n        endif;\n    else:\n        $message = 'Entry with this email address is already registered';\n        echo $message;\n        //header(\"Location: /welcomeadmin.php\");\n    endif;\n    }\nelse:\n    $message = 'Email addresses missing';\n    echo $message;\n    //header(\"Location: /welcomeadmin.php\");\nendif;\nelseif (isset($_POST[\"updateUser\"]) && !empty($_POST[\"updateUser\"])):\nif (($_SERVER[\"REQUEST_METHOD\"] == \"POST\") && (!empty($_POST['email']))):\n\n    $records = $conn->prepare('SELECT * FROM groupInfo WHERE id = :id');\n    $records->bindParam(':id', $_POST['userid']);\n    $records->execute();\n    $results = $records->fetch(PDO::FETCH_ASSOC);\n\n    // var_dump($results);\n    // print_r($results);\n\n    if (!is_bool($results)):\n        $userid = $_POST['userid'];\n        $firstname = $_POST['firstname'];\n        $lastname = $_POST['lastname'];\n        $email = $_POST['email'];\n        $category = $_POST['category'];\n\n        // Enter the new user in the database\n        $sql = \"UPDATE groupInfo SET firstname='$firstname', lastname='$lastname', email='$email', category='$category' WHERE id=$userid\";\n        $stmt = $conn->prepare($sql);\n\n        if( $stmt->execute() ):\n            $message = 'Successfully created updated user';\n            //echo $message;\n            header(\"Location: /welcomeadmin.php\");\n        else:\n            $message = 'Sorry there must have been an issue on updating this entry';\n            echo $message;\n            //header(\"Location: /welcomeadmin.php\");\n        endif;\n    else:\n        $message = 'Entry can not be found';\n        echo $message;\n        //header(\"Location: /welcomeadmin.php\");\n    endif;\nelse:\n    $message = 'Email address is missing';\n    echo $message;\n    //header(\"Location: /welcomeadmin.php\");\nendif;\nelseif (isset($_POST[\"deleteUser\"]) && !empty($_POST[\"deleteUser\"])):\nif (($_SERVER[\"REQUEST_METHOD\"] == \"POST\") && (!empty($_POST['email']))):\n\n    $records = $conn->prepare('SELECT * FROM groupInfo WHERE id = :id');\n    $records->bindParam(':id', $_POST['userid']);\n    $records->execute();\n    $results = $records->fetch(PDO::FETCH_ASSOC);\n\n    // var_dump($results);\n    // print_r($results);\n\n    if (!is_bool($results)):\n        $userid = $_POST['userid'];\n        // Enter the new user in the database\n        $sql = \"DELETE FROM groupInfo WHERE id=$userid\";\n        $stmt = $conn->prepare($sql);\n    \n\n        if( $stmt->execute() ):\n            $message = 'Successfully created deleted user';\n            //echo $message;\n            header(\"Location: /welcomeadmin.php\");\n        else:\n            $message = 'Sorry there must have been an issue on deleting this entry';\n            echo $message;\n            //header(\"Location: /welcomeadmin.php\");\n        endif;\n    else:\n        $message = 'Entry with this email address is not found';\n        echo $message;\n        //header(\"Location: /welcomeadmin.php\");\n    endif;\nelse:\n    $message = 'Email address is missing';\n    echo $message;\n    //header(\"Location: /welcomeadmin.php\");\nendif;\nelseif (isset($_POST[\"editUser\"]) && !empty($_POST[\"editUser\"])):\nif (($_SERVER[\"REQUEST_METHOD\"] == \"POST\") && (!empty($_POST['email']))):\n\n    $records = $conn->prepare('SELECT * FROM groupInfo WHERE email = :email');\n    $records->bindParam(':email', $_POST['email']);\n    $records->execute();\n    $results = $records->fetch(PDO::FETCH_ASSOC);\n\n    // var_dump($results);\n    // print_r($results);\n\n    if (is_bool($results)):\n        $userid = $_POST['userid'];\n        $firstname = $_POST['firstname'];\n        $lastname = $_POST['lastname'];\n        $email = $_POST['email'];\n        $category = $_POST['category'];\n        // Enter the new user in the database\n\n        if( $stmt->execute() ):\n            $message = 'Successfully created new user';\n            //echo $message;\n            header(\"Location: /welcomeadmin.php\");\n        else:\n            $message = 'Sorry there must have been an issue registering this entry';\n            echo $message;\n            //header(\"Location: /welcomeadmin.php\");\n        endif;\n    else:\n        $message = 'Entry with this email address is already registered';\n        echo $message;\n        //header(\"Location: /welcomeadmin.php\");\n    endif;\nelse:\n    $message = 'Email address is missing';\n    echo $message;\n    //header(\"Location: /welcomeadmin.php\");\nendif;\nendif;\n\nfunction randNum($length)\n{\n    $str = mt_rand(1, 9); // first number (0 not allowed)\n    for ($i = 1; $i < $length; $i++)\n    {\n        $str .= mt_rand(0, 9);\n    }\n    return $str;\n}\n\n?>",
-			"file": "floorball/groupInfo.php",
-			"file_size": 8326,
-			"file_write_time": 131415787359978480,
-			"settings":
-			{
-				"buffer_size": 8092,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "\n/*\n\n    totalNrOfUeAllocations = 0;\n    nrOfUeAllocationsForCell = 0;\n    nrOfRlcSduUeForCell = 0;\n    totalNrofRlcSduUe = 0;\n    // reset grantedUes every TTI.\n    LPP_ldmMemSet((void*)grantedUes, 0, sizeof(grantedUes));\n    LPP_ldmMemSet((void*)ueAllocIndInfoData, 0, sizeof(ueAllocIndInfoData));\n    for (cellIndex = 0; cellIndex < eceCellRuntimeData.noOfCells; cellIndex++)\n    {\n      // Copy granted ues back from each thread(cell)\n      LPP_cmToLdmBlockCopy(cmPuschSchedFeedback[cellIndex].cmGrantedUes_p,\n                           &grantedUes[cellIndex],\n                           sizeof(grantedUeS));\n      // Copy all ueAllocations back from each thread(cell)\n      nrOfUeAllocationsForCell = cmPuschSchedFeedback[cellIndex].nrOfUeAllocations;\n\n      LPP_cmToLdmBlockCopy(cmPuschSchedFeedback[cellIndex].ueAllocIndInfoData,\n                           &ueAllocIndInfoData[totalNrOfUeAllocations],\n                           sizeof(ueAllocIndInfoDataS) * nrOfUeAllocationsForCell);\n      grantedUes[cellIndex].ueAllocIndInfoData_p = &ueAllocIndInfoData[totalNrOfUeAllocations];\n      grantedUes[cellIndex].ueAllocIndInfoDataIdx = totalNrOfUeAllocations;\n      totalNrOfUeAllocations += nrOfUeAllocationsForCell;\n\n      nrOfRlcSduUeForCell = cmPuschSchedFeedback[cellIndex].nrOfRlcSduUe;\n      // Fill up nrOfRlcSduUe\n      nrOfRlcSduUe[cellIndex] = nrOfRlcSduUeForCell;\n\n      // Fill up ueAndTimeInfoData and lastSduSize with data from each thread(cell)\n      // Start copying from index 0 for all cells.\n      LPP_cmToLdmBlockCopy(&cmPuschSchedFeedback[cellIndex].ueAndTimeInfoData[0],\n                           &ueAndTimeInfoData[totalNrofRlcSduUe],\n                           sizeof(ueAndTimeInfoDataS) * nrOfRlcSduUeForCell);\n      LPP_cmToLdmBlockCopy(&cmPuschSchedFeedback[cellIndex].lastSduSize[0],\n                           &lastSduSize[totalNrofRlcSduUe],\n                           sizeof(U16) * nrOfRlcSduUeForCell);\n\n      totalNrofRlcSduUe += nrOfRlcSduUeForCell;\n    }\n\n    UPC_LAT_SUBSET1_BEGIN(\"ulMacCe_capacity_sendSignals\");\n    UPC_LAT_SUBSET1_TICK(\"sendSignals\");\n\n    LPP_ldmMemSet((void*)nrOfSdu, 0, sizeof(nrOfSdu));\n    // Set one entry to non-zero to exercise the SduInfo reporting.\n    nrOfSdu[0] = 3;\n    LPP_ldmMemSet((void*)nrOfSdu, 0, sizeof(nrOfSdu));\n\n    // Stop sending rlcSduInfoInd in the last 3 TTIs. Prevent\n    // the rlcSduInfoInd from popping out signals after cell\n    // is deactivated\n    if (((isPdcchIndReceived && ((nrOfScenarios - curScenarioNr) > 3)) ||\n          (isUeAllocIndReceived)))\n    {\n      dispatchBbmFeedbackThread(isPdcchIndReceived,\n                                nrOfScenarios,\n                                curScenarioNr,\n                                isUeAllocIndReceived,\n                                ueAndTimeInfoData,\n                                nrOfSdu,\n                                lastSduSize,\n                                nrOfRlcSduUe,\n                                12,\n                                nrOfPushCqiReqsSent++,\n                                eceCellRuntimeData.noOfCells);\n    }\n\n    if (isUeAllocIndReceived)\n    {\n      verifyAllocations(currentSfn, currentSubframe, grantedUes, eceCellRuntimeData.noOfCells);\n\n      // Signals sent once per TTI\n      // Copy to cm. Used by the thread that sends cceCostInd signal\n      copyGrantedUesToCm(grantedUes, ueAllocIndInfoData);\n      buildAndSendCceCostInd(eceCellRuntimeData.noOfCells);\n\n      // Send in one scheduleRaMsg3Ind per radioframe (i.e. every 10th sf)\n      if ((_3GPP_SUBFRAMES_PER_RADIOFRAME * (currentSfn - msg3Sfn) +\n           (currentSubframe - msg3Subframe)) >= _3GPP_SUBFRAMES_PER_RADIOFRAME)\n      {\n        sendOnescheduleRaMsg3IndPerRadioframe(nrOfScenarios, curScenarioNr, &eceCellRuntimeData);\n        msg3Sfn = currentSfn;\n        msg3Subframe = currentSubframe;\n      }\n\n      // Check that all signals were sent before the next subframe starts.\n      getTime(&currentSfn, &currentSubframe);\n      BT_ASSERT(lastSfn == currentSfn);\n      BT_ASSERT(lastSubframe == currentSubframe);\n\n      LPP_ldmMemSet((void*)grantedUes, 0, sizeof(grantedUes));\n\n      // If we did not send a macCtrlInfoInd, then we can reset the counter\n      // and start sending again in the next subframe. If we had to send\n      // a macCtrlInfo because of msg3, then the counter will be reset to\n      // one instead of zero to account for this.\n//      nrOfMacCtrlInfoInds = (nrOfMacCtrlInfoIndsSent == 0) ?\n//          (nrOfMacCtrlInfoInds - MAX_NR_OF_MACCTRLINFOINDS):\n//          (nrOfMacCtrlInfoInds + 1);\n//\n//      BBT_CM_VERBOSE2(\"-- nrOfMacCtrlInfoIndsSent %d \"\n//                      \"nrOfMacCtrlInfoInds %d\\n\",\n//                      nrOfMacCtrlInfoIndsSent,\n//                      nrOfMacCtrlInfoInds);\n    }\n\n    UPC_LAT_SUBSET1_END(\"ulMacCe_capacity_sendSignals\");\n*/",
-			"settings":
-			{
-				"buffer_size": 4854,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "-\tSend cqiPuschReq\n-\tSend 2x ulRlcSduInfoInd\n-\tSend cceCostInd\n-\tVerify allocations for all cells\n\n\nAsk Stefan abot nrOfSdus\n\ndadd6bf2ad5451b33c169fa876a97f78f04baac3\n",
-			"settings":
-			{
-				"buffer_size": 167,
-				"line_ending": "Windows",
-				"name": "-\tSend cqiPuschReq"
-			}
-		},
-		{
-			"contents": "#Load programs\n\nmodule add git\nmodule add kdiff3\nmodule add lsf\nmodule add gitlfs\n\nsetenv LESS '-M -I -R'\n\nsource /proj/lterbsSwdi/ltegit_admin_jenkins/aliases/.gitaliases\nsource /proj/lterbsSwdi/l2shell/.cshrc.common\n\nalias showHEAD 'echo $MY_GIT_TOP'\n\nbindkey -k down history-search-forward\nbindkey -k up history-search-backward\nbindkey \"^[[4~\" end-of-line\nbindkey \"^[[3~\" delete-char\nbindkey     \"^[[1;5C\" forward-word\nbindkey     \"^[[1;5D\" backward-word \n\n##Git special\n\n##Git special\nsetenv GIT_BRANCH_CMD \"sh -c 'git branch --no-color 2> /dev/null' | sed -e '/^[^*]/d' -e 's/* \\(.*\\)/(\\1) /'\"\nalias precmd 'source ~/gitprompt.tcsh'\n\n## Aliases\n\nalias ebb 'cd /repo/$USER/ebb/'\nalias bbi 'cd /repo/$USER/ebb/bbi'\nalias ebb1 'cd /repo/$USER/ebb1/'\nalias t 'bash $HOME/Desktop/terminal.sh'\nalias gsu 'ebb; git submodule update; cd -'\nalias gsu1 'ebb1; git submodule update; cd -'\nalias refresh 'source ~/.cshrc.user'\nalias sa 'source ~/.cshrc.user'\nalias sge 'ebb; source gitenv.csh'\nalias sge1 'ebb1; source gitenv.csh'\nalias h  history\nalias home 'cd $HOME'\nalias gc 'git clean -dxf -e .baseline/g2/data -e .ccache/ -e remap_catalog.xml'\nalias gg 'git grep -i -n --color=always'\nalias gr 'grep --color=always'\nalias gl 'git log'\nalias glg 'git log --graph --full-history --all --color --pretty=format:\"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s\"'\nalias qb 'make -f .flexbs_build.mk'\nalias fe 'nautilus ./'\nalias fn 'find -name'\nalias clean 'git clean -dxf -e .baseline/g2/data -e .ccache/ -e remap_catalog.xml'\nalias tn 'bash /home/ekurtin/scripts/change_title.sh'\n\n#ECE\nalias bece 'flexbs build -u -x upcul_ece_budget_dus52.xml -V testfm=bait --emake --allinc'\nalias rece 'bait config_ece_svp_trinity.bait'\nalias ece 'cd $MY_GIT_TOP/bbap/dra/ulMacCeBl/ulMacCeSwU/test/flex/ece/src'\nalias hostece 'cd $MY_GIT_TOP/bbap/dra/ulMacCeBl/ulMacCeSwU/test/host'\n\nalias recehw 'bait config_ece_hw_trinity.bait'\nalias rmxls 'lfs-uninstall'\nalias gca  'git commit --amend'\n#source ~/.alias.user\n#source ~/Public/.path\n\n## Handy Aliases\nalias cfg 'python /home/ekurtin/scripts/cfg.py'\n\n##Navigation\nalias cdebb 'cd /repo/$USER/ebb/ && showHEAD'\nalias gitenv-ebb 'cd /repo/$USER/ebb/ && source  env.csh && cd - && showHEAD'\n\nalias cdebb1 'cd /repo/$USER/ebb1/ && showHEAD'\nalias gitenv-ebb1 'cd /repo/$USER/ebb1/ && source gitenv.csh && cd - && showHEAD'\n\nalias cdbb3 'cd /repo/$USER/bb3/ && showHEAD'\nalias gitenv-bb3 'cd /repo/$USER/bb3/ && source gitenv.csh && cd - && showHEAD'\n\nalias cdupc 'cd /$MY_GIT_TOP/upc'\nalias cdulMacCeBl 'cd /$MY_GIT_TOP/upc/ulMacCeBl'\nalias cdulMacCeSwU 'cd /$MY_GIT_TOP/upc/ulMacCeBl/ulMacCeSwU'\nalias cddlMacCeBl 'cd /$MY_GIT_TOP/upc/dlMacCeBl'\n\nalias ali      'gedit /home/.cshrc.user&'\nalias xmls     'ls | grep *.xml'\n\n##Git alias\nalias gpr 'git pull -r'\nalias gl 'git log --format=\"%C(auto) %h %s %d\" --graph'\nalias prettyLog 'git log --pretty=tformat:\"%Cred%h%Creset %ad | %s%C(yellow)%d%Creset %C(white)%an%Creset\" --graph --date=short -100'\n\n######### Installed from /home/ejonfog/install.sh #########\nsource /home/ekurtin/scripts/pather/paths.txt\nalias ce 'sh /home/ejonfog/scripts/pather/pather.sh'\nalias ge 'sh /home/ejonfog/scripts/geditFix/geditFix.sh'\nalias title 'sh /home/ejonfog/scripts/change_title/change_title.sh'\nalias nyancat 'sh /home/ejonfog/scripts/nyancat/nyancat.sh'\nalias cb 'sh /home/ejonfog/scripts/copyboard/copyboard.sh'\n\n",
-			"settings":
-			{
-				"buffer_size": 3374,
-				"line_ending": "Windows",
-				"name": "#Load programs"
 			}
 		}
 	],
@@ -358,33 +248,34 @@
 	},
 	"expanded_folders":
 	[
-		"/C/xampp/htdocs/floorball",
-		"/C/xampp/htdocs/floorball/assets",
-		"/C/xampp/htdocs/floorball/assets/css"
+		"/C/git/cybercom/floorball"
 	],
 	"file_history":
 	[
-		"/C/xampp/htdocs/floorball/groupInfo.php",
-		"/C/xampp/htdocs/floorball/login.php",
-		"/C/xampp/htdocs/floorball/register.php",
-		"/C/xampp/htdocs/floorball/welcome.php",
-		"/C/xampp/htdocs/floorball/heading.html",
-		"/C/xampp/htdocs/floorball/index.php",
-		"/C/xampp/htdocs/floorball/logout.php",
-		"/C/xampp/htdocs/floorball/sendmail.php",
-		"/C/xampp/htdocs/floorball/admin_time_update.php",
-		"/C/xampp/htdocs/floorball/admin_user_update.php",
-		"/C/xampp/htdocs/floorball/update_user_status.php",
-		"/C/xampp/htdocs/floorball/sort.php",
-		"/C/xampp/htdocs/floorball/user.php",
-		"/C/xampp/htdocs/floorball/pass.php",
-		"/C/xampp/htdocs/floorball/time.php",
-		"/C/xampp/htdocs/floorball/test.php",
-		"/C/xampp/htdocs/floorball/databaseconf.php",
-		"/C/xampp/htdocs/floorball/databaseconn.php",
-		"/C/xampp/htdocs/floorball/select.php",
-		"/C/xampp/htdocs/floorball/sendmail-and-php.ini",
-		"/C/xampp/htdocs/floorball/assets/CSS/style.css",
+		"/C/git/cybercom/floorball/databaseconn.php",
+		"/C/git/cybercom/floorball/groupInfo.php",
+		"/C/git/cybercom/floorball/sort.php",
+		"/C/git/cybercom/floorball/user.php",
+		"/C/git/cybercom/floorball/update_user_status.php",
+		"/C/git/cybercom/floorball/welcome.php",
+		"/C/git/cybercom/floorball/sendmail.php",
+		"/C/git/cybercom/floorball/admin.php",
+		"/C/git/cybercom/floorball/welcomeadmin.php",
+		"/C/git/cybercom/floorball/assets/css/style.css",
+		"/C/git/cybercom/floorball/login.php",
+		"/C/git/cybercom/floorball/register.php",
+		"/C/git/cybercom/floorball/heading.html",
+		"/C/git/cybercom/floorball/index.php",
+		"/C/git/cybercom/floorball/logout.php",
+		"/C/git/cybercom/floorball/admin_time_update.php",
+		"/C/git/cybercom/floorball/admin_user_update.php",
+		"/C/git/cybercom/floorball/pass.php",
+		"/C/git/cybercom/floorball/time.php",
+		"/C/git/cybercom/floorball/test.php",
+		"/C/git/cybercom/floorball/databaseconf.php",
+		"/C/git/cybercom/floorball/select.php",
+		"/C/git/cybercom/floorball/sendmail-and-php.ini",
+		"/C/git/cybercom/floorball/assets/CSS/style.css",
 		"/C/Users/tikur1/Downloads/tiku14-perl-assignments-lab1/task4.pl",
 		"/C/Users/tikur1/Downloads/tiku14-perl-assignments-lab1/task3.pl",
 		"/C/Users/tikur1/Downloads/tiku14-perl-assignments-lab1/task2.pl",
@@ -428,43 +319,13 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "floorball/assets/css/style.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2642,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								822,
-								822
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 459.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "floorball/welcomeadmin.php",
-					"semi_transient": false,
+					"file": "welcomeadmin.php",
+					"semi_transient": true,
 					"settings":
 					{
 						"buffer_size": 2274,
@@ -474,8 +335,8 @@
 						"selection":
 						[
 							[
-								80,
-								80
+								0,
+								0
 							]
 						],
 						"settings":
@@ -484,43 +345,21 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 405.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "floorball/databaseconn.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 261,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								95,
-								95
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 1,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
 				{
-					"buffer": 3,
-					"file": "floorball/admin.php",
+					"buffer": 1,
+					"file": "admin.php",
 					"semi_transient": false,
 					"settings":
 					{
@@ -531,192 +370,8 @@
 						"selection":
 						[
 							[
-								6867,
-								6867
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5217.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "floorball/sendmail.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1992,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								905,
-								905
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 46.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "floorball/welcome.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2111,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1828,
-								1828
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 138.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "floorball/update_user_status.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3060,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2518,
-								2518
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2146.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "floorball/user.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8370,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7365,
-								7365
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5188.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "floorball/sort.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5677,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5677,
-								5677
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4480.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 4,
-			"sheets":
-			[
-				{
-					"buffer": 9,
-					"file": "floorball/databaseconf.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3106,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1265,
-								1265
+								0,
+								0
 							]
 						],
 						"settings":
@@ -727,123 +382,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "floorball/groupInfo.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8092,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6019,
-								6019
-							]
-						],
-						"settings":
-						{
-							"history_list_is_closing": true,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 867.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4854,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								36,
-								36
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 167,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								167,
-								167
-							]
-						],
-						"settings":
-						{
-							"auto_name": "-\tSend cqiPuschReq",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3374,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3374,
-								3374
-							]
-						],
-						"settings":
-						{
-							"auto_name": "#Load programs",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1278.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
