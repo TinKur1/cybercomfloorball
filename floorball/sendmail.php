@@ -39,7 +39,7 @@ if(count($users) > 0) {
 
 		<div>
 		        <p>' . $user['firstname'] . ' ' . $user['lastname'] . ', welcome to ' . SITE_NAME . '.</p>
-		        <p>Please click the following link to respond to this event "<a href ="http://localhost:8080/welcome.php?userid=' . $userid . '&eventid=' . $eventid . '">localhost:8080/welcome.php?userid=' . $userid . '&eventid=' . $eventid . '</a>"</p>
+		        <p>Please click the following link to respond to this event "<a href ="http://localhost/welcome.php?userid=' . $userid . '&eventid=' . $eventid . '">localhost:8080/welcome.php?userid=' . $userid . '&eventid=' . $eventid . '</a>"</p>
 
 
 		</div>

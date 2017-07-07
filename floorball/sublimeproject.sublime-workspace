@@ -200,10 +200,11 @@
 	"buffers":
 	[
 		{
-			"file": "welcomeadmin.php",
+			"file": "sendmail.php",
 			"settings":
 			{
-				"buffer_size": 2274,
+				"buffer_size": 1987,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
@@ -213,6 +214,15 @@
 			{
 				"buffer_size": 10093,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "https://inside.cybercom.com/Teamwork/OrganisationTeams/Cybercom-Sweden/News11/\n",
+			"settings":
+			{
+				"buffer_size": 79,
+				"line_ending": "Windows",
+				"name": "https://inside.cybercom.com/Teamwork/OrganisationT"
 			}
 		}
 	],
@@ -252,6 +262,8 @@
 	],
 	"file_history":
 	[
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/C/xampp/apache/conf/extra/httpd-vhosts.conf",
 		"/C/git/cybercom/floorball/databaseconn.php",
 		"/C/git/cybercom/floorball/groupInfo.php",
 		"/C/git/cybercom/floorball/sort.php",
@@ -324,19 +336,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "welcomeadmin.php",
-					"semi_transient": true,
+					"file": "sendmail.php",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2274,
+						"buffer_size": 1987,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1930,
+								1930
 							]
 						],
 						"settings":
@@ -345,7 +357,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 540.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -354,7 +366,7 @@
 			]
 		},
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -370,8 +382,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								33,
+								33
 							]
 						],
 						"settings":
@@ -379,6 +391,34 @@
 							"syntax": "Packages/PHP/PHP.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 79,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								78,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "https://inside.cybercom.com/Teamwork/OrganisationT",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
